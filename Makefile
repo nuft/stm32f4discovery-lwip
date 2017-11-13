@@ -46,7 +46,7 @@ endif
 # If enabled, this option makes the build process faster by not compiling
 # modules not used in the current configuration.
 ifeq ($(USE_SMART_BUILD),)
-  USE_SMART_BUILD = yes
+  USE_SMART_BUILD = no
 endif
 
 #
@@ -112,8 +112,15 @@ CSRC = $(STARTUPSRC) \
        $(HALSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
+	   $(CHIBIOS)/os/various/evtimer.c \
        $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
-       main.c usbcfg.c
+	   $(CHIBIOS)/os/various/syscalls.c \
+       src/malloc_lock.c \
+       src/lwip_bindings/lwipthread.c \
+       src/lwip_bindings/arch/sys_arch.c \
+       src/main.c src/usbcfg.c
+
+include lwip.mk
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -146,7 +153,11 @@ ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 INCDIR = $(CHIBIOS)/os/license \
          $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(HALINC) $(PLATFORMINC) $(BOARDINC) $(TESTINC) \
-         $(CHIBIOS)/os/various $(CHIBIOS)/os/hal/lib/streams
+         $(CHIBIOS)/os/various $(CHIBIOS)/os/hal/lib/streams \
+         src/lwip_bindings \
+         lwip/src/include \
+         lwip/src/include/ipv4 \
+         src
 
 #
 # Project, sources and paths

@@ -3,6 +3,10 @@
 #include <chprintf.h>
 #include "usbcfg.h"
 
+#include <lwip/netif.h>
+#include <lwip/dhcp.h>
+
+
 static THD_WORKING_AREA(waThread1, 128);
 static THD_FUNCTION(Thread1, arg)
 {
@@ -45,6 +49,13 @@ int main(void)
     chThdSleepMilliseconds(1500);
     usbStart(serusbcfg.usbp, &usbcfg);
     usbConnectBus(serusbcfg.usbp);
+
+    /*
+     * Start IP over Ethernet
+     */
+    struct netif *ethernet_if;
+    ip_thread_init();
+    ethernet_if = netif_find("en0");
 
     /*
      * Creates the blinker thread.
