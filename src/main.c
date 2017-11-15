@@ -2,6 +2,7 @@
 #include <hal.h>
 #include <chprintf.h>
 #include "usbcfg.h"
+#include "lwipthread.h"
 
 #include <lwip/netif.h>
 #include <lwip/dhcp.h>
@@ -50,12 +51,14 @@ int main(void)
     usbStart(serusbcfg.usbp, &usbcfg);
     usbConnectBus(serusbcfg.usbp);
 
+
+    chThdSleepMilliseconds(1000);
     /*
-     * Start IP over Ethernet
+     * Start IP over SLIP
      */
-    struct netif *ethernet_if;
+    struct netif *netif;
     ip_thread_init();
-    ethernet_if = netif_find("en0");
+    netif = netif_find("sl0");
 
     /*
      * Creates the blinker thread.
@@ -64,6 +67,5 @@ int main(void)
 
     while (true) {
         chThdSleepMilliseconds(1000);
-        chprintf((BaseSequentialStream *)&SDU1, "hello world\n");
     }
 }

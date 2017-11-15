@@ -61,11 +61,6 @@
 #define LWIP_SEND_TIMEOUT                   50
 #endif
 
-/** @brief Link speed. */
-#if !defined(LWIP_LINK_SPEED) || defined(__DOXYGEN__)
-#define LWIP_LINK_SPEED                     100000000
-#endif
-
 /** @brief MAC Address byte 0. */
 #if !defined(LWIP_ETHADDR_0) || defined(__DOXYGEN__)
 #define LWIP_ETHADDR_0                      0xC2

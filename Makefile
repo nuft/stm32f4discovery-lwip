@@ -117,6 +117,7 @@ CSRC = $(STARTUPSRC) \
 	   $(CHIBIOS)/os/various/syscalls.c \
        src/malloc_lock.c \
        src/lwip_bindings/lwipthread.c \
+       src/lwip_bindings/sio.c \
        src/lwip_bindings/arch/sys_arch.c \
        src/main.c src/usbcfg.c
 
