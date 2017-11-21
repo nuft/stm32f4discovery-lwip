@@ -13,7 +13,8 @@
 #define X32_F "x"
 
 /* Diagnostic macros. */
-#define LWIP_PLATFORM_DIAG(x)
+void lwip_printf(const char *fmt, ...);
+#define LWIP_PLATFORM_DIAG(x, ...) { lwip_printf x; }
 #define LWIP_PLATFORM_ASSERT(x) { osalSysHalt(x); }
 
 /* Tell lwIP to use its own defines() for standard unix error codes */

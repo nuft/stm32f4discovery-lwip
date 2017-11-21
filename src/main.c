@@ -7,6 +7,17 @@
 #include <lwip/netif.h>
 #include <lwip/dhcp.h>
 
+#include <stdarg.h>
+#include <stdio.h>
+
+void lwip_printf(const char *fmt, ...)
+{
+    va_list ap;
+    va_start(ap, fmt);
+    vprintf(fmt, ap);
+    va_end(ap);
+}
+
 
 static THD_WORKING_AREA(waThread1, 128);
 static THD_FUNCTION(Thread1, arg)
@@ -31,9 +42,18 @@ int main(void)
      * Activates the serial driver 2 using the driver default configuration.
      * PA2(TX) and PA3(RX) are routed to USART2.
      */
-    sdStart(&SD2, NULL);
+    static const SerialConfig serial_config =
+    {
+        115200,
+        0,
+        USART_CR2_STOP1_BITS,
+        0
+    };
+    sdStart(&SD2, &serial_config);
     palSetPadMode(GPIOA, 2, PAL_MODE_ALTERNATE(7));
     palSetPadMode(GPIOA, 3, PAL_MODE_ALTERNATE(7));
+
+    chprintf((BaseSequentialStream *)&SD2, "\nboot\n");
 
     /*
      * Initializes a serial-over-USB CDC driver.

@@ -23,6 +23,9 @@ void ip_thread_init(void)
     thisif.hwaddr[4] = LWIP_ETHADDR_4;
     thisif.hwaddr[5] = LWIP_ETHADDR_5;
 
+    thisif.name[0] = 's';
+    thisif.name[1] = 'l';
+
     LWIP_IPADDR(&ip);
     LWIP_NETMASK(&netmask);
     LWIP_GATEWAY(&gateway);

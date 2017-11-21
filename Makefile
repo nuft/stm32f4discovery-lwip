@@ -208,7 +208,7 @@ CPPWARN = -Wall -Wextra -Wundef
 #
 
 # List all user C define here, like -D_DEBUG=1
-UDEFS =
+UDEFS = -DCHPRINTF_USE_FLOAT=TRUE
 
 # Define ASM defines here
 UADEFS =
@@ -229,5 +229,8 @@ ULIBS =
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC
 include $(RULESPATH)/rules.mk
 
-flash: all
+flash_stlink: all
 	openocd -f openocd.cfg -c "program $(BUILDDIR)/$(PROJECT).elf verify reset" -c "shutdown"
+
+flash_blackmagic: all
+	arm-none-eabi-gdb --command=debug.gdb --command=flash.gdb build/ch.elf
