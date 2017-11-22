@@ -1,6 +1,7 @@
 #include <hal.h>
 #include <lwip/netif.h>
 #include <lwip/ip4.h>
+#include <lwip/tcpip.h>
 #include <netif/slipif.h>
 #include "lwipthread.h"
 
@@ -29,6 +30,10 @@ void ip_thread_init(void)
     LWIP_IPADDR(&ip);
     LWIP_NETMASK(&netmask);
     LWIP_GATEWAY(&gateway);
+
+
+    // lwip_init();
+    tcpip_init(NULL, NULL);
 
     netif_add(&thisif, &ip, &netmask, &gateway, NULL, slipif_init, ip4_input);
 

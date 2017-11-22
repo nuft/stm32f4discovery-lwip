@@ -119,7 +119,7 @@ CSRC = $(STARTUPSRC) \
        src/lwip_bindings/lwipthread.c \
        src/lwip_bindings/sio.c \
        src/lwip_bindings/arch/sys_arch.c \
-       src/main.c src/usbcfg.c
+       src/main.c src/usbcfg.c src/udp_demo.c
 
 include lwip.mk
 

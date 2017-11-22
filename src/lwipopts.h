@@ -7,11 +7,10 @@
 #ifndef __LWIPOPT_H__
 #define __LWIPOPT_H__
 
-#define LWIP_DBG_TYPES_ON   LWIP_DBG_ON
-#define LWIP_COMPAT_MUTEX_ALLOWED
-
 /* See lwip/src/include/lwip/opt.h for reference. */
 #define MEM_ALIGNMENT                   4
+
+#define LWIP_COMPAT_MUTEX_ALLOWED
 
 #define NO_SYS                          0
 #define LWIP_ETHERNET                   0
@@ -22,19 +21,31 @@
 #define LWIP_IPV6                       0
 
 #define LWIP_UDP                        1
-#define LWIP_TCP                        0
+#define LWIP_TCP                        1
 #define LWIP_SOCKET                     0
+#define LWIP_NETCONN                    1
 #define LWIP_ICMP                       1
 #define LWIP_DHCP                       0
+
+#define MEM_LIBC_MALLOC 1
+#define MEMP_MEM_MALLOC 1
+
+#define MEMP_NUM_PBUF                   16
+#define TCPIP_MBOX_SIZE                 MEMP_NUM_PBUF
+#define TCPIP_THREAD_NAME              "tcpip_thread"
+#define TCPIP_THREAD_STACKSIZE          4096
 
 #define DEFAULT_THREAD_STACK_SIZE       4096
 #define DEFAULT_RAW_RECVMBOX_SIZE       4
 #define DEFAULT_UDP_RECVMBOX_SIZE       4
+#define DEFAULT_TCP_RECVMBOX_SIZE       4
 #define DEFAULT_ACCEPTMBOX_SIZE         4
 
 #define LWIP_IPADDR(p)  IP4_ADDR(p, 192, 168, 3, 20)
 #define LWIP_GATEWAY(p) IP4_ADDR(p, 192, 168, 3, 1)
 #define LWIP_NETMASK(p) IP4_ADDR(p, 255, 255, 255, 0)
+
+#define LWIP_HOOK_IP4_ROUTE(d) netif_default
 
 #define LWIP_HAVE_SLIPIF                1
 #define SLIP_USE_RX_THREAD              1
@@ -48,7 +59,7 @@
 #define MEM_LIBC_MALLOC 1
 #define MEMP_MEM_MALLOC 1
 
-#define LWIP_DEBUG
+// #define LWIP_DEBUG
 
 #define LWIP_DBG_MIN_LEVEL              LWIP_DBG_LEVEL_ALL
 #define LWIP_DBG_TYPES_ON               LWIP_DBG_ON

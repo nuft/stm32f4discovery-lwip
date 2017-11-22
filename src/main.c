@@ -16,6 +16,7 @@ void lwip_printf(const char *fmt, ...)
     va_start(ap, fmt);
     vprintf(fmt, ap);
     va_end(ap);
+    chThdSleepMilliseconds(10);
 }
 
 
@@ -78,7 +79,6 @@ int main(void)
      */
     struct netif *netif;
     ip_thread_init();
-    netif = netif_find("sl0");
 
     /*
      * Creates the blinker thread.
@@ -86,6 +86,8 @@ int main(void)
     chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO, Thread1, NULL);
 
     while (true) {
+        void send_hello_world(void);
+        send_hello_world();
         chThdSleepMilliseconds(1000);
     }
 }
