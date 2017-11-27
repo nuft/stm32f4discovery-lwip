@@ -34,6 +34,62 @@ static THD_FUNCTION(Thread1, arg)
 }
 
 
+static void threads_profile(BaseSequentialStream *chp)
+{
+    static const char *states[] = {CH_STATE_NAMES};
+    thread_t *tp;
+
+    chprintf(chp,
+             "stklimit    stack     addr refs prio     state       time         name\r\n");
+    tp = chRegFirstThread();
+    do {
+#if (CH_DBG_ENABLE_STACK_CHECK == TRUE) || (CH_CFG_USE_DYNAMIC == TRUE)
+        uint32_t stklimit = (uint32_t)tp->wabase;
+#else
+        uint32_t stklimit = 0U;
+#endif
+        chprintf(chp, "%08lx %08lx %08lx %4lu %4lu %9s %10lu %12s\r\n",
+                 stklimit, (uint32_t)tp->ctx.sp, (uint32_t)tp,
+                 (uint32_t)tp->refs - 1, (uint32_t)tp->prio, states[tp->state],
+                 (uint32_t)tp->time, tp->name == NULL ? "" : tp->name);
+        tp = chRegNextThread(tp);
+    } while (tp != NULL);
+}
+
+void udp_rx_count_get(uint32_t *msg, uint32_t *bytes);
+void udp_receive_start(void);
+
+void profile_rx(BaseSequentialStream *chp)
+{
+    udp_receive_start();
+    while (true) {
+        uint32_t msg, byte;
+        udp_rx_count_get(&msg, &byte); // reset
+        chThdSleepMilliseconds(1000);
+        udp_rx_count_get(&msg, &byte);
+        chprintf(chp, "msg: %u, bytes: %u\n", msg, byte);
+        threads_profile(chp);
+    }
+}
+
+void udp_tx_count_get(uint32_t *msg, uint32_t *bytes);
+void udp_transmit_thd(void *arg);
+static THD_WORKING_AREA(udp_thd_wa, 2000);
+
+void profile_tx(BaseSequentialStream *chp)
+{
+    chThdCreateStatic(udp_thd_wa, sizeof(udp_thd_wa), NORMALPRIO, udp_transmit_thd, NULL);
+
+    while (true) {
+        uint32_t msg, byte;
+        udp_tx_count_get(&msg, &byte); // reset
+        chThdSleepMilliseconds(1000);
+        udp_tx_count_get(&msg, &byte);
+        chprintf(chp, "msg: %u, bytes: %u\n", msg, byte);
+        threads_profile(chp);
+    }
+}
+
 int main(void)
 {
     halInit();
@@ -77,7 +133,6 @@ int main(void)
     /*
      * Start IP over SLIP
      */
-    struct netif *netif;
     ip_thread_init();
 
     /*
@@ -85,9 +140,8 @@ int main(void)
      */
     chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO, Thread1, NULL);
 
+    profile_tx((BaseSequentialStream *)&SD2);
     while (true) {
-        void send_hello_world(void);
-        send_hello_world();
         chThdSleepMilliseconds(1000);
     }
 }

@@ -34,6 +34,7 @@
 #define TCPIP_MBOX_SIZE                 MEMP_NUM_PBUF
 #define TCPIP_THREAD_NAME              "tcpip_thread"
 #define TCPIP_THREAD_STACKSIZE          4096
+#define TCPIP_THREAD_PRIO               (LOWPRIO + 1)
 
 #define DEFAULT_THREAD_STACK_SIZE       4096
 #define DEFAULT_RAW_RECVMBOX_SIZE       4
